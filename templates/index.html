@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morphotype Analyzer - Body Type Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <h1>FitMorph Analyzer</h1>
+            </div>
+            <p class="subtitle">Discover your body type and get personalized fitness & nutrition plans</p>
+        </header>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash-message error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <form action="/upload" method="post" enctype="multipart/form-data" class="upload-form">
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Upload Your Photo</h3>
+                        <p>Drag and drop your full-body image here, or click to browse</p>
+                        <p class="file-info">Supported formats: PNG, JPG, JPEG, GIF (Max 16MB)</p>
+                        <input type="file" name="file" id="file-input" accept=".png,.jpg,.jpeg,.gif" required>
+                        <button type="button" class="browse-btn">Browse Files</button>
+                    </div>
+
+                    <!-- User Information Form -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" name="age" min="13" max="100" value="25" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="activity_level">Activity Level</label>
+                                <select id="activity_level" name="activity_level" required>
+                                    <option value="sedentary">Sedentary (little/no exercise)</option>
+                                    <option value="light">Light (1-3 days/week)</option>
+                                    <option value="moderate" selected>Moderate (3-5 days/week)</option>
+                                    <option value="active">Active (6-7 days/week)</option>
+                                    <option value="very_active">Very Active (2x/day, intense)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="goal">Primary Goal</label>
+                                <select id="goal" name="goal" required>
+                                    <option value="muscle_gain" selected>Muscle Gain</option>
+                                    <option value="fat_loss">Fat Loss</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="strength">Strength Building</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="preferences">Dietary Preferences/Restrictions (Optional)</label>
+                            <textarea id="preferences" name="preferences" rows="3" 
+                                placeholder="e.g., vegetarian, gluten-free, dairy-free, allergies..."></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="analyze-btn" id="analyze-btn">
+                        <i class="fas fa-search"></i>
+                        Analyze My Body Type
+                    </button>
+                </form>
+            </div>
+
+            <!-- Information Section -->
+            <div class="info-section">
+                <h2><i class="fas fa-info-circle"></i> How It Works</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h4>1. Upload Photo</h4>
+                        <p>Upload a clear, full-body image in good lighting</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>2. AI Analysis</h4>
+                        <p>Our AI analyzes your body proportions using MediaPipe</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>3. Get Results</h4>
+                        <p>Receive your morphotype and personalized plans</p>
+                    </div>
+                </div>
+
+                <div class="morphotype-info">
+                    <h3><i class="fas fa-dna"></i> Body Types (Somatotypes)</h3>
+                    <div class="morphotype-grid">
+                        <div class="morphotype-card ectomorph">
+                            <h4>Ectomorph</h4>
+                            <ul>
+                                <li>Lean and narrow build</li>
+                                <li>Fast metabolism</li>
+                                <li>Difficulty gaining weight</li>
+                                <li>Low body fat</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="morphotype-card mesomorph">
+                            <h4>Mesomorph</h4>
+                            <ul>
+                                <li>Naturally muscular</li>
+                                <li>Athletic build</li>
+                                <li>Balanced metabolism</li>
+                                <li>Builds muscle easily</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="morphotype-card endomorph">
+                            <h4>Endomorph</h4>
+                            <ul>
+                                <li>Broader build</li>
+                                <li>Slower metabolism</li>
+                                <li>Gains weight easily</li>
+                                <li>Round, soft physique</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 FitMorph Analyzer. Powered by MediaPipe AI Technology.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,818 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    padding: 2rem 0;
+    color: white;
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.logo i {
+    font-size: 2.5rem;
+    color: #ffd700;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-top: 0.5rem;
+}
+
+.back-btn {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.2);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateX(-5px);
+}
+
+/* Flash Messages */
+.flash-messages {
+    margin: 1rem 0;
+}
+
+.flash-message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.flash-message.error {
+    background: #fee;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 1rem 0;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* Upload Section */
+.upload-section {
+    margin-bottom: 3rem;
+}
+
+.upload-area {
+    border: 3px dashed #ddd;
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.upload-area.dragover {
+    border-color: #667eea;
+    background: #f0f4ff;
+    transform: scale(1.02);
+}
+
+.upload-icon i {
+    font-size: 4rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.upload-area h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.upload-area p {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.file-info {
+    font-size: 0.9rem;
+    color: #999;
+}
+
+#file-input {
+    display: none;
+}
+
+.browse-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.browse-btn:hover {
+    background: #5a6fd8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Form Section */
+.form-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.form-section h3 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Analyze Button */
+.analyze-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.analyze-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.analyze-btn:active {
+    transform: translateY(-1px);
+}
+
+/* Info Section */
+.info-section {
+    margin-top: 3rem;
+}
+
+.info-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.info-card {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9ff;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-icon {
+    background: #667eea;
+    color: white;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+}
+
+.info-card h4 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* Morphotype Info */
+.morphotype-info h3 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.morphotype-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.morphotype-card {
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.morphotype-card.ectomorph {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.morphotype-card.mesomorph {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.morphotype-card.endomorph {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+.morphotype-card h4 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.morphotype-card ul {
+    list-style: none;
+    text-align: left;
+}
+
+.morphotype-card li {
+    padding: 0.5rem 0;
+    color: #555;
+}
+
+/* Results Page Styles */
+.results-content {
+    flex: 1;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 1rem 0;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.results-header {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    align-items: start;
+}
+
+.uploaded-image {
+    position: sticky;
+    top: 2rem;
+}
+
+.uploaded-image img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.morphotype-result {
+    background: #f8f9ff;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.morphotype-badge {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    color: white;
+    text-align: center;
+    margin: 1rem 0;
+    font-weight: bold;
+}
+
+.morphotype-badge.ectomorph {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.morphotype-badge.mesomorph {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.morphotype-badge.endomorph {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+.confidence {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.morphotype-description {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.characteristics ul {
+    list-style: none;
+}
+
+.characteristics li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.characteristics i {
+    color: #28a745;
+}
+
+/* Section Styles */
+.section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.section h2 {
+    margin-bottom: 2rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Measurements Section */
+.measurements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.measurement-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.measurement-card:hover {
+    transform: translateY(-5px);
+}
+
+.measurement-icon {
+    background: #667eea;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+}
+
+.measurement-card h4 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.measurement-card p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+/* Workout Section */
+.plan-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.plan-stat {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.day-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.day-card h5 {
+    color: #667eea;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.exercise-tips ul {
+    list-style: none;
+}
+
+.exercise-tips li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.exercise-tips i {
+    color: #28a745;
+}
+
+/* Nutrition Section */
+.nutrition-overview {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.calorie-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.calorie-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #667eea;
+    margin-top: 1rem;
+}
+
+.macros-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.macros-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.macro-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.macro-item.protein {
+    background: #ffe6e6;
+    color: #c53030;
+}
+
+.macro-item.carbs {
+    background: #fff2e6;
+    color: #d69e2e;
+}
+
+.macro-item.fats {
+    background: #e6f7ff;
+    color: #2b77e6;
+}
+
+.macro-item i {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.macro-item span {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.macro-item strong {
+    font-size: 1.2rem;
+}
+
+.meals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.meal-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.meal-header {
+    background: #667eea;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meal-calories {
+    background: rgba(255,255,255,0.2);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.meal-suggestions {
+    padding: 1rem;
+}
+
+.meal-suggestions ul {
+    list-style: none;
+}
+
+.meal-suggestions li {
+    padding: 0.5rem 0;
+    color: #666;
+    border-bottom: 1px solid #eee;
+}
+
+.meal-suggestions li:last-child {
+    border-bottom: none;
+}
+
+/* User Info Section */
+.user-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Actions Section */
+.actions-section {
+    text-align: center;
+    margin: 3rem 0;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: white;
+    margin-top: auto;
+}
+
+.disclaimer {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .results-header {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .uploaded-image {
+        position: relative;
+        top: auto;
+    }
+    
+    .nutrition-overview {
+        grid-template-columns: 1fr;
+    }
+    
+    .macros-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .back-btn {
+        position: relative;
+        top: auto;
+        left: auto;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading .analyze-btn {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+    }
+    
+    .header, .footer, .actions-section, .back-btn {
+        display: none;
+    }
+    
+    .main-content, .results-content {
+        box-shadow: none;
+        margin: 0;
+        padding: 1rem;
+    }
+    
+    .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}

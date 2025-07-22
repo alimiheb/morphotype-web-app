@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - FitMorph Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-dumbbell"></i>
+                <h1>FitMorph Analyzer</h1>
+            </div>
+            <a href="{{ url_for('index') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> New Analysis
+            </a>
+        </header>
+
+        <main class="results-content">
+            <!-- Analysis Results -->
+            <div class="results-header">
+                <div class="uploaded-image">
+                    <img src="{{ image_url }}" alt="Uploaded Image" id="analyzed-image">
+                </div>
+                
+                <div class="morphotype-result">
+                    <h2><i class="fas fa-award"></i> Your Body Type</h2>
+                    <div class="morphotype-badge {{ result.analysis.morphotype.type.lower() }}">
+                        <h3>{{ result.analysis.morphotype.type }}</h3>
+                        <div class="confidence">
+                            <span>Confidence: {{ result.analysis.morphotype.confidence }}</span>
+                        </div>
+                    </div>
+                    <p class="morphotype-description">{{ result.analysis.morphotype.description }}</p>
+                    
+                    <div class="characteristics">
+                        <h4>Key Characteristics:</h4>
+                        <ul>
+                            {% for characteristic in result.analysis.morphotype.characteristics %}
+                                <li><i class="fas fa-check"></i> {{ characteristic }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body Measurements -->
+            <div class="section measurements-section">
+                <h2><i class="fas fa-ruler"></i> Body Measurements</h2>
+                <div class="measurements-grid">
+                    <div class="measurement-card">
+                        <div class="measurement-icon">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                        <h4>Shoulder Width</h4>
+                        <p>{{ result.analysis.measurements.shoulder_width }}</p>
+                    </div>
+                    
+                    <div class="measurement-card">
+                        <div class="measurement-icon">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </div>
+                        <h4>Hip Width</h4>
+                        <p>{{ result.analysis.measurements.hip_width }}</p>
+                    </div>
+                    
+                    <div class="measurement-card">
+                        <div class="measurement-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h4>Hip/Shoulder Ratio</h4>
+                        <p>{{ result.analysis.measurements.ratio_3d }}</p>
+                    </div>
+                    
+                    <div class="measurement-card">
+                        <div class="measurement-icon">
+                            <i class="fas fa-weight"></i>
+                        </div>
+                        <h4>Estimated Weight</h4>
+                        <p>{{ result.analysis.body_stats.weight_kg }} kg</p>
+                    </div>
+                    
+                    <div class="measurement-card">
+                        <div class="measurement-icon">
+                            <i class="fas fa-ruler-vertical"></i>
+                        </div>
+                        <h4>Estimated Height</h4>
+                        <p>{{ result.analysis.body_stats.height_cm }} cm</p>
+                    </div>
+                    
+                    <div class="measurement-card">
+                        <div class="measurement-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h4>Daily Calories (TDEE)</h4>
+                        <p>{{ result.analysis.energy.tdee }} kcal</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workout Plan -->
+            <div class="section workout-section">
+                <h2><i class="fas fa-dumbbell"></i> Personalized Workout Plan</h2>
+                <div class="plan-overview">
+                    <div class="plan-stat">
+                        <strong>Focus:</strong> {{ result.analysis.workout_plan.focus }}
+                    </div>
+                    <div class="plan-stat">
+                        <strong>Frequency:</strong> {{ result.analysis.workout_plan.frequency }}
+                    </div>
+                    <div class="plan-stat">
+                        <strong>Rest:</strong> {{ result.analysis.workout_plan.rest }}
+                    </div>
+                </div>
+                
+                <div class="weekly-schedule">
+                    <h4>Weekly Schedule</h4>
+                    <div class="schedule-grid">
+                        {% for day, workout in result.analysis.workout_plan.weekly_plan.items() %}
+                        <div class="day-card">
+                            <h5>{{ day }}</h5>
+                            <p>{{ workout }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="exercise-tips">
+                    <h4>Exercise Recommendations</h4>
+                    <ul>
+                        {% for exercise in result.analysis.workout_plan.exercises %}
+                        <li><i class="fas fa-check"></i> {{ exercise }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Nutrition Plan -->
+            <div class="section nutrition-section">
+                <h2><i class="fas fa-utensils"></i> Personalized Nutrition Plan</h2>
+                
+                <div class="nutrition-overview">
+                    <div class="calorie-info">
+                        <h4>Daily Calorie Target</h4>
+                        <div class="calorie-number">{{ result.analysis.nutrition_plan.total_calories }} kcal</div>
+                    </div>
+                    
+                    <div class="macros-info">
+                        <h4>Daily Macros</h4>
+                        <div class="macros-grid">
+                            <div class="macro-item protein">
+                                <i class="fas fa-drumstick-bite"></i>
+                                <span>Protein</span>
+                                <strong>{{ result.analysis.nutrition_plan.macros.protein_g }}g</strong>
+                            </div>
+                            <div class="macro-item carbs">
+                                <i class="fas fa-bread-slice"></i>
+                                <span>Carbs</span>
+                                <strong>{{ result.analysis.nutrition_plan.macros.carbs_g }}g</strong>
+                            </div>
+                            <div class="macro-item fats">
+                                <i class="fas fa-cheese"></i>
+                                <span>Fats</span>
+                                <strong>{{ result.analysis.nutrition_plan.macros.fats_g }}g</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="meals-plan">
+                    <h4>Daily Meal Plan</h4>
+                    <div class="meals-grid">
+                        {% for meal_name, meal_info in result.analysis.nutrition_plan.meals.items() %}
+                        <div class="meal-card">
+                            <div class="meal-header">
+                                <h5>{{ meal_name.title() }}</h5>
+                                <span class="meal-calories">{{ meal_info.calories }} kcal</span>
+                            </div>
+                            <div class="meal-suggestions">
+                                <ul>
+                                    {% for suggestion in meal_info.suggestions %}
+                                    <li>{{ suggestion }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Information Summary -->
+            <div class="section user-info-section">
+                <h2><i class="fas fa-user"></i> Analysis Summary</h2>
+                <div class="user-info-grid">
+                    <div class="info-item">
+                        <strong>Age:</strong> {{ result.analysis.user_info.age }} years
+                    </div>
+                    <div class="info-item">
+                        <strong>Gender:</strong> {{ result.analysis.user_info.gender.title() }}
+                    </div>
+                    <div class="info-item">
+                        <strong>Activity Level:</strong> {{ result.analysis.user_info.activity_level.replace('_', ' ').title() }}
+                    </div>
+                    <div class="info-item">
+                        <strong>Primary Goal:</strong> {{ result.analysis.user_info.goal.replace('_', ' ').title() }}
+                    </div>
+                    {% if result.analysis.user_info.preferences %}
+                    <div class="info-item full-width">
+                        <strong>Dietary Preferences:</strong> {{ result.analysis.user_info.preferences }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-section">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-redo"></i> New Analysis
+                </a>
+                <button onclick="window.print()" class="btn btn-secondary">
+                    <i class="fas fa-print"></i> Print Results
+                </button>
+                <button onclick="downloadResults()" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 FitMorph Analyzer. Results are estimates based on image analysis.</p>
+            <p class="disclaimer">
+                <i class="fas fa-info-circle"></i>
+                Consult with healthcare professionals before starting any new fitness or nutrition program.
+            </p>
+        </footer>
+    </div>
+
+    <div id="analysis-data" data-analysis="{{ result.analysis | tojson | e }}"></div>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/results.js') }}"></script>
+</body>
+</html>
