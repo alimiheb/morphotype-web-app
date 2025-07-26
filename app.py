@@ -77,29 +77,38 @@ def upload_file():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
             
-            # Get user preferences from form
-            age = request.form.get('age', type=int) or 25
+            # Get form data including new fields
+            age = int(request.form.get('age', 25))
             gender = request.form.get('gender', 'unknown')
             activity_level = request.form.get('activity_level', 'moderate')
             goal = request.form.get('goal', 'muscle_gain')
             preferences = request.form.get('preferences', '')
+            height = float(request.form.get('height', 0))  # New field
+            weight = float(request.form.get('weight', 0))  # New field
             
-            # Analyze the image
-            analysis_result = analyzer.analyze_image(
+            # Validate new fields
+            if height <= 0 or weight <= 0:
+                flash('Please provide valid height and weight values.', 'error')
+                return redirect(url_for('index'))
+            
+            analyzer = MorphotypeAnalyzer()
+            result = analyzer.analyze_image(
                 filepath, 
-                age=age,
-                gender=gender,
-                activity_level=activity_level,
-                goal=goal,
-                preferences=preferences
+                age=age, 
+                gender=gender, 
+                activity_level=activity_level, 
+                goal=goal, 
+                preferences=preferences,
+                height=height,  # Pass height
+                weight=weight   # Pass weight
             )
             
-            if analysis_result['success']:
+            if result['success']:
                 return render_template('results.html', 
-                                     result=analysis_result,
+                                     result=result,
                                      image_url=url_for('static', filename=f'uploads/{filename}'))
             else:
-                flash(f"Analysis failed: {analysis_result['error']}")
+                flash(f"Analysis failed: {result['error']}")
                 return redirect(url_for('index'))
         else:
             flash('Invalid file type. Please upload PNG, JPG, JPEG, or GIF files.')
@@ -107,7 +116,7 @@ def upload_file():
     
     except Exception as e:
         logger.error(f"Upload error: {str(e)}")
-        flash(f"An error occurred: {str(e)}")
+        flash(f'Error processing your request: {str(e)}', 'error')
         return redirect(url_for('index'))
 
 @app.route('/api/analyze', methods=['POST'])

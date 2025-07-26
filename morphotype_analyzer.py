@@ -7,18 +7,20 @@ import mediapipe as mp
 import math
 import json
 import logging
+from gemini_integration import GeminiPlanGenerator
 
 logger = logging.getLogger(__name__)
 
 class MorphotypeAnalyzer:
     def __init__(self):
-        """Initialize MediaPipe pose detection"""
+        """Initialize MediaPipe pose detection and Gemini plan generator"""
         self.mp_pose = mp.solutions.pose
         self.pose_detector = self.mp_pose.Pose(
             static_image_mode=True,
             min_detection_confidence=0.5
         )
         self.mp_drawing = mp.solutions.drawing_utils
+        self.gemini_generator = GeminiPlanGenerator()
     
     def preprocess_image(self, image_path):
         """Preprocess image to remove EXIF data and convert to OpenCV format"""
@@ -196,153 +198,8 @@ class MorphotypeAnalyzer:
             'activity_multiplier': multiplier
         }
     
-    def generate_workout_plan(self, morphotype, goal='muscle_gain'):
-        """Generate workout plan based on morphotype"""
-        plans = {
-            'Ectomorph': {
-                'focus': 'Mass building and strength',
-                'frequency': '4-5 days per week',
-                'rest': 'Longer rest periods (2-3 minutes)',
-                'weekly_plan': {
-                    'Monday': 'Upper Body Strength (Chest, Shoulders, Triceps)',
-                    'Tuesday': 'Lower Body Power (Squats, Deadlifts, Lunges)',
-                    'Wednesday': 'Rest or Light Cardio',
-                    'Thursday': 'Back and Biceps',
-                    'Friday': 'Full Body Compound Movements',
-                    'Saturday': 'Core and Flexibility',
-                    'Sunday': 'Complete Rest'
-                },
-                'exercises': [
-                    'Compound movements (squats, deadlifts, bench press)',
-                    'Progressive overload focus',
-                    'Limited cardio (2-3 sessions per week)',
-                    'Heavy weights, lower reps (6-8 reps)'
-                ]
-            },
-            'Mesomorph': {
-                'focus': 'Balanced strength and conditioning',
-                'frequency': '5-6 days per week',
-                'rest': 'Moderate rest periods (1-2 minutes)',
-                'weekly_plan': {
-                    'Monday': 'Push Day (Chest, Shoulders, Triceps)',
-                    'Tuesday': 'Pull Day (Back, Biceps)',
-                    'Wednesday': 'Legs and Glutes',
-                    'Thursday': 'Push Day (Repeat)',
-                    'Friday': 'Pull Day (Repeat)',
-                    'Saturday': 'Legs and Core',
-                    'Sunday': 'Active Recovery or HIIT'
-                },
-                'exercises': [
-                    'Push/pull/legs split',
-                    'Mix of compound and isolation exercises',
-                    'Regular cardio (3-4 sessions per week)',
-                    'Moderate weights, varied reps (8-12 reps)'
-                ]
-            },
-            'Endomorph': {
-                'focus': 'Fat loss and muscle definition',
-                'frequency': '5-6 days per week',
-                'rest': 'Shorter rest periods (45-90 seconds)',
-                'weekly_plan': {
-                    'Monday': 'Full Body Circuit Training',
-                    'Tuesday': 'HIIT Cardio + Core',
-                    'Wednesday': 'Upper Body Strength',
-                    'Thursday': 'Lower Body + Cardio',
-                    'Friday': 'Full Body Metabolic Training',
-                    'Saturday': 'Long Cardio Session',
-                    'Sunday': 'Active Recovery (yoga, walking)'
-                },
-                'exercises': [
-                    'High-intensity interval training (HIIT)',
-                    'Circuit training',
-                    'More cardio (4-5 sessions per week)',
-                    'Higher reps, shorter rest (12-15 reps)'
-                ]
-            }
-        }
-        
-        return plans.get(morphotype, plans['Mesomorph'])
-    
-    def generate_nutrition_plan(self, morphotype, tdee, goal='muscle_gain'):
-        """Generate nutrition plan based on morphotype and goals"""
-        # Calorie adjustments based on goal
-        if goal == 'muscle_gain':
-            calories = tdee + 300
-        elif goal == 'fat_loss':
-            calories = tdee - 500
-        else:  # maintenance
-            calories = tdee
-        
-        # Macro ratios based on morphotype
-        macro_ratios = {
-            'Ectomorph': {'protein': 0.25, 'carbs': 0.50, 'fats': 0.25},
-            'Mesomorph': {'protein': 0.30, 'carbs': 0.40, 'fats': 0.30},
-            'Endomorph': {'protein': 0.35, 'carbs': 0.30, 'fats': 0.35}
-        }
-        
-        ratios = macro_ratios.get(morphotype, macro_ratios['Mesomorph'])
-        
-        protein_g = (calories * ratios['protein']) / 4
-        carbs_g = (calories * ratios['carbs']) / 4
-        fats_g = (calories * ratios['fats']) / 9
-        
-        # Meal distribution
-        meal_plan = {
-            'total_calories': round(calories, 0),
-            'macros': {
-                'protein_g': round(protein_g, 1),
-                'carbs_g': round(carbs_g, 1),
-                'fats_g': round(fats_g, 1)
-            },
-            'meals': {
-                'breakfast': {
-                    'calories': round(calories * 0.25, 0),
-                    'suggestions': self.get_meal_suggestions(morphotype, 'breakfast')
-                },
-                'lunch': {
-                    'calories': round(calories * 0.35, 0),
-                    'suggestions': self.get_meal_suggestions(morphotype, 'lunch')
-                },
-                'dinner': {
-                    'calories': round(calories * 0.30, 0),
-                    'suggestions': self.get_meal_suggestions(morphotype, 'dinner')
-                },
-                'snacks': {
-                    'calories': round(calories * 0.10, 0),
-                    'suggestions': self.get_meal_suggestions(morphotype, 'snacks')
-                }
-            }
-        }
-        
-        return meal_plan
-    
-    def get_meal_suggestions(self, morphotype, meal_type):
-        """Get meal suggestions based on morphotype"""
-        suggestions = {
-            'Ectomorph': {
-                'breakfast': ['Oatmeal with banana and peanut butter', 'Whole grain toast with avocado', 'Protein smoothie with fruits'],
-                'lunch': ['Rice bowl with chicken and vegetables', 'Pasta with lean meat sauce', 'Quinoa salad with nuts'],
-                'dinner': ['Grilled salmon with sweet potato', 'Lean beef with rice', 'Chicken stir-fry with noodles'],
-                'snacks': ['Nuts and dried fruits', 'Protein bars', 'Greek yogurt with granola']
-            },
-            'Mesomorph': {
-                'breakfast': ['Eggs with whole grain toast', 'Greek yogurt with berries', 'Protein pancakes'],
-                'lunch': ['Grilled chicken salad', 'Tuna sandwich', 'Vegetable soup with protein'],
-                'dinner': ['Grilled fish with vegetables', 'Turkey meatballs with quinoa', 'Tofu stir-fry'],
-                'snacks': ['Apple with almond butter', 'Cottage cheese', 'Mixed nuts']
-            },
-            'Endomorph': {
-                'breakfast': ['Vegetable omelet', 'Green smoothie with protein', 'Chia seed pudding'],
-                'lunch': ['Large salad with lean protein', 'Vegetable soup', 'Lettuce wraps with chicken'],
-                'dinner': ['Grilled vegetables with fish', 'Cauliflower rice bowl', 'Zucchini noodles with turkey'],
-                'snacks': ['Raw vegetables', 'Herbal tea', 'Small portion of berries']
-            }
-        }
-        
-        return suggestions.get(morphotype, {}).get(meal_type, ['Balanced meal options'])
-    
-    def analyze_image(self, image_path, age=25, gender='unknown', activity_level='moderate', goal='muscle_gain', preferences=''):
-        """Main analysis function"""
+    def analyze_image(self, image_path, age=25, gender='unknown', activity_level='moderate', goal='muscle_gain', preferences='', height=0, weight=0):
+        """Main analysis function with Gemini integration"""
         try:
             # Preprocess image
             img_cv = self.preprocess_image(image_path)
@@ -362,8 +219,15 @@ class MorphotypeAnalyzer:
             # Classify morphotype
             morphotype_info = self.classify_morphotype(measurements)
             
-            # Estimate body stats
-            body_stats = self.estimate_body_stats(measurements, age, gender)
+            # Use provided height/weight or estimate if not provided
+            if height > 0 and weight > 0:
+                body_stats = {
+                    'height_cm': height,
+                    'weight_kg': weight,
+                    'estimated_bmi': round(weight / ((height / 100) ** 2), 1)
+                }
+            else:
+                body_stats = self.estimate_body_stats(measurements, age, gender)
             
             # Calculate TDEE
             energy_info = self.calculate_tdee(
@@ -374,13 +238,29 @@ class MorphotypeAnalyzer:
                 activity_level
             )
             
-            # Generate plans
-            workout_plan = self.generate_workout_plan(morphotype_info['type'], goal)
-            nutrition_plan = self.generate_nutrition_plan(
-                morphotype_info['type'],
-                energy_info['tdee'],
-                goal
-            )
+            # Prepare data for Gemini API
+            user_data = {
+                'morphotype': morphotype_info['type'],
+                'height': body_stats['height_cm'],
+                'weight': body_stats['weight_kg'],
+                'age': age,
+                'gender': gender,
+                'activity_level': activity_level,
+                'goal': goal,
+                'preferences': preferences,
+                'tdee': energy_info['tdee']
+            }
+            
+            # Generate AI-powered plans
+            ai_plans = self.gemini_generator.generate_personalized_plans(user_data)
+            
+            if not ai_plans['success']:
+                return {'success': False, 'error': ai_plans['error']}
+            
+            # Debug: Print the structure to see what we're getting
+            print("DEBUG - AI Plans structure:")
+            print("workout_plan keys:", list(ai_plans['workout_plan'].keys()))
+            print("meal_plan keys:", list(ai_plans['meal_plan'].keys()))
             
             return {
                 'success': True,
@@ -389,18 +269,23 @@ class MorphotypeAnalyzer:
                     'measurements': measurements,
                     'body_stats': body_stats,
                     'energy': energy_info,
-                    'workout_plan': workout_plan,
-                    'nutrition_plan': nutrition_plan,
+                    'workout_plan': ai_plans['workout_plan'],  # Make sure this is correct
+                    'nutrition_plan': ai_plans['meal_plan'],   # Map meal_plan to nutrition_plan
+                    'additional_tips': ai_plans.get('additional_tips', []),
                     'user_info': {
                         'age': age,
                         'gender': gender,
                         'activity_level': activity_level,
                         'goal': goal,
-                        'preferences': preferences
+                        'preferences': preferences,
+                        'height': body_stats['height_cm'],
+                        'weight': body_stats['weight_kg']
                     }
                 }
             }
             
         except Exception as e:
-            logger.error(f"Analysis error: {str(e)}")
+            print(f"DEBUG - Exception in analyze_image: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return {'success': False, 'error': f'Analysis failed: {str(e)}'}

@@ -101,51 +101,74 @@
                 </div>
             </div>
 
-            <!-- Workout Plan -->
+            <!-- Workout Plan - Updated for Gemini API -->
             <div class="section workout-section">
                 <h2><i class="fas fa-dumbbell"></i> Personalized Workout Plan</h2>
+                
+                {% if result.analysis.workout_plan.overview %}
                 <div class="plan-overview">
                     <div class="plan-stat">
-                        <strong>Focus:</strong> {{ result.analysis.workout_plan.focus }}
+                        <strong>Focus:</strong> {{ result.analysis.workout_plan.overview.focus }}
                     </div>
                     <div class="plan-stat">
-                        <strong>Frequency:</strong> {{ result.analysis.workout_plan.frequency }}
+                        <strong>Frequency:</strong> {{ result.analysis.workout_plan.overview.frequency }}
                     </div>
                     <div class="plan-stat">
-                        <strong>Rest:</strong> {{ result.analysis.workout_plan.rest }}
+                        <strong>Duration:</strong> {{ result.analysis.workout_plan.overview.duration }}
+                    </div>
+                    <div class="plan-stat">
+                        <strong>Intensity:</strong> {{ result.analysis.workout_plan.overview.intensity }}
                     </div>
                 </div>
+                {% endif %}
                 
+                {% if result.analysis.workout_plan.weekly_schedule %}
                 <div class="weekly-schedule">
                     <h4>Weekly Schedule</h4>
                     <div class="schedule-grid">
-                        {% for day, workout in result.analysis.workout_plan.weekly_plan.items() %}
+                        {% for day, workout in result.analysis.workout_plan.weekly_schedule.items() %}
                         <div class="day-card">
                             <h5>{{ day }}</h5>
-                            <p>{{ workout }}</p>
+                            <div class="workout-details">
+                                <p><strong>{{ workout.type }}</strong></p>
+                                <p><strong>Duration:</strong> {{ workout.duration }}</p>
+                                <div class="exercises">
+                                    <strong>Exercises:</strong>
+                                    <ul>
+                                        {% for exercise in workout.exercises %}
+                                        <li>{{ exercise }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <p class="workout-notes">{{ workout.notes }}</p>
+                            </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
+                {% endif %}
                 
+                {% if result.analysis.workout_plan.key_principles %}
                 <div class="exercise-tips">
-                    <h4>Exercise Recommendations</h4>
+                    <h4>Key Training Principles</h4>
                     <ul>
-                        {% for exercise in result.analysis.workout_plan.exercises %}
-                        <li><i class="fas fa-check"></i> {{ exercise }}</li>
+                        {% for principle in result.analysis.workout_plan.key_principles %}
+                        <li><i class="fas fa-check"></i> {{ principle }}</li>
                         {% endfor %}
                     </ul>
                 </div>
+                {% endif %}
             </div>
 
-            <!-- Nutrition Plan -->
+            <!-- Nutrition Plan - Updated for Gemini API -->
             <div class="section nutrition-section">
                 <h2><i class="fas fa-utensils"></i> Personalized Nutrition Plan</h2>
                 
+                {% if result.analysis.nutrition_plan.daily_targets %}
                 <div class="nutrition-overview">
                     <div class="calorie-info">
                         <h4>Daily Calorie Target</h4>
-                        <div class="calorie-number">{{ result.analysis.nutrition_plan.total_calories }} kcal</div>
+                        <div class="calorie-number">{{ result.analysis.nutrition_plan.daily_targets.calories }} kcal</div>
                     </div>
                     
                     <div class="macros-info">
@@ -154,43 +177,97 @@
                             <div class="macro-item protein">
                                 <i class="fas fa-drumstick-bite"></i>
                                 <span>Protein</span>
-                                <strong>{{ result.analysis.nutrition_plan.macros.protein_g }}g</strong>
+                                <strong>{{ result.analysis.nutrition_plan.daily_targets.protein_g }}g</strong>
                             </div>
                             <div class="macro-item carbs">
                                 <i class="fas fa-bread-slice"></i>
                                 <span>Carbs</span>
-                                <strong>{{ result.analysis.nutrition_plan.macros.carbs_g }}g</strong>
+                                <strong>{{ result.analysis.nutrition_plan.daily_targets.carbs_g }}g</strong>
                             </div>
                             <div class="macro-item fats">
                                 <i class="fas fa-cheese"></i>
                                 <span>Fats</span>
-                                <strong>{{ result.analysis.nutrition_plan.macros.fats_g }}g</strong>
+                                <strong>{{ result.analysis.nutrition_plan.daily_targets.fats_g }}g</strong>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 
+                {% if result.analysis.nutrition_plan.nutrition_guidelines %}
+                <div class="nutrition-guidelines">
+                    <h4>Nutrition Guidelines</h4>
+                    <ul>
+                        {% for guideline in result.analysis.nutrition_plan.nutrition_guidelines %}
+                        <li><i class="fas fa-check"></i> {{ guideline }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                {% if result.analysis.nutrition_plan.weekly_meals %}
                 <div class="meals-plan">
-                    <h4>Daily Meal Plan</h4>
+                    <h4>Weekly Meal Plan</h4>
                     <div class="meals-grid">
-                        {% for meal_name, meal_info in result.analysis.nutrition_plan.meals.items() %}
+                        {% for day, meals in result.analysis.nutrition_plan.weekly_meals.items() %}
                         <div class="meal-card">
                             <div class="meal-header">
-                                <h5>{{ meal_name.title() }}</h5>
-                                <span class="meal-calories">{{ meal_info.calories }} kcal</span>
+                                <h5>{{ day }}</h5>
                             </div>
-                            <div class="meal-suggestions">
-                                <ul>
-                                    {% for suggestion in meal_info.suggestions %}
-                                    <li>{{ suggestion }}</li>
-                                    {% endfor %}
-                                </ul>
+                            <div class="daily-meals">
+                                {% if meals.breakfast %}
+                                <div class="meal-item">
+                                    <h6>🌅 Breakfast</h6>
+                                    <p>{{ meals.breakfast.meal }}</p>
+                                    <small>{{ meals.breakfast.calories }} cal | {{ meals.breakfast.prep_time }}</small>
+                                </div>
+                                {% endif %}
+                                {% if meals.lunch %}
+                                <div class="meal-item">
+                                    <h6>🌞 Lunch</h6>
+                                    <p>{{ meals.lunch.meal }}</p>
+                                    <small>{{ meals.lunch.calories }} cal | {{ meals.lunch.prep_time }}</small>
+                                </div>
+                                {% endif %}
+                                {% if meals.dinner %}
+                                <div class="meal-item">
+                                    <h6>🌙 Dinner</h6>
+                                    <p>{{ meals.dinner.meal }}</p>
+                                    <small>{{ meals.dinner.calories }} cal | {{ meals.dinner.prep_time }}</small>
+                                </div>
+                                {% endif %}
+                                {% if meals.snacks %}
+                                <div class="meal-item">
+                                    <h6>🍎 Snacks</h6>
+                                    <p>{{ meals.snacks.meal }}</p>
+                                    <small>{{ meals.snacks.calories }} cal | {{ meals.snacks.prep_time }}</small>
+                                </div>
+                                {% endif %}
+                                {% if meals.get('pre-workout') %}
+                                <div class="meal-item">
+                                    <h6>💪 Pre-Workout</h6>
+                                    <p>{{ meals['pre-workout'].meal }}</p>
+                                    <small>{{ meals['pre-workout'].calories }} cal | {{ meals['pre-workout'].prep_time }}</small>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
+                {% endif %}
             </div>
+
+            {% if result.analysis.additional_tips %}
+            <div class="section tips-section">
+                <h2><i class="fas fa-lightbulb"></i> Additional Tips</h2>
+                <ul class="tips-list">
+                    {% for tip in result.analysis.additional_tips %}
+                    <li><i class="fas fa-star"></i> {{ tip }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
 
             <!-- User Information Summary -->
             <div class="section user-info-section">
